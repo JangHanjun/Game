@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 //배틀을 나타내는 상태
-public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST,ESCAPE } 
+public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST, ESCAPE,  FAIL} 
 
 public class BattleSystem : MonoBehaviour {
 	// 주인공과 적 가져오기
@@ -21,8 +22,11 @@ public class BattleSystem : MonoBehaviour {
 	//UI 표시용
 	public BattleHud playerHUD;
 	public BattleHud enemyHUD;
+	// 도망치는 확률 변수
+	public int eValue;
 
 	public BattleState state;
+
 
 	void Start() {
 		state = BattleState.START;    //첫 시작은 스타트
@@ -43,6 +47,7 @@ public class BattleSystem : MonoBehaviour {
 
 		yield return new WaitForSeconds(2f);
 
+		eValue = 95;  // 도망갈 수 있는 확률
 		state = BattleState.PLAYERTURN;
 		PlayerTurn();
 	}
@@ -51,6 +56,7 @@ public class BattleSystem : MonoBehaviour {
 	void PlayerTurn() {
 		dialogueText.text = "무얼 해야할까 : ";
 	}
+
 	IEnumerator PlayerAttack() {
 		bool isDead = enemyUnit.TakeDamage(playerUnit.damage);
 
@@ -85,8 +91,15 @@ public class BattleSystem : MonoBehaviour {
 
 		yield return new WaitForSeconds(2f);
 
-		state = BattleState.ESCAPE;
-		EndBattle();
+		if(Random.Range(1, 100) < eValue) {   // 현재 90퍼센트의 확률로 도망 못감
+			state = BattleState.ESCAPE;
+			EndBattle();
+		} else {
+			dialogueText.text = "도망 못갔쥬?";
+			yield return new WaitForSeconds(2f);
+			state = BattleState.ENEMYTURN;
+			StartCoroutine(EnemyTurn());
+		}
 	}
 
 	public void OnAttackButton() {
@@ -145,6 +158,13 @@ public class BattleSystem : MonoBehaviour {
 		} else if (state == BattleState.ESCAPE) {
 			dialogueText.text = "성공적으로 도망쳤다.";
 		}
+		Invoke("EndScene", 2);
+	}
+
+	void EndScene() {
+		SceneManager.LoadScene("ShadowIsland");
+		// 해야할 것
+		// 이전 씬에서의 위치를 기억해 그 위치로 보내주기
 	}
 
 	
