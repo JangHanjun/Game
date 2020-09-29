@@ -58,10 +58,30 @@ public class BattleSystem : MonoBehaviour {
 	}
 
 	IEnumerator PlayerAttack() {
-		bool isDead = enemyUnit.TakeDamage(playerUnit.damage);
+		bool isDead = enemyUnit.TakeDamage(playerUnit.damage, enemyUnit.defense);
 
 		enemyHUD.SetHP(enemyUnit.currentHP);
 		dialogueText.text = "공격은 성공적이다!";
+
+		yield return new WaitForSeconds(2f);
+
+		if (isDead) {
+			//적이 죽는다면 배틀 상태 변화
+			state = BattleState.WON;
+			EndBattle();
+		} else {
+			state = BattleState.ENEMYTURN;
+			StartCoroutine(EnemyTurn());
+		}
+	}
+
+	IEnumerator PlayerMagicAttack() {
+		bool isDead = enemyUnit.TakeDamage(playerUnit.Mdamage, enemyUnit.defense);
+
+		playerUnit.AfterMAttack();
+		playerHUD.SetMP(playerUnit.currentMP);
+		enemyHUD.SetHP(enemyUnit.currentHP);
+		dialogueText.text = "스킬이 잘 들어갔다!";
 
 		yield return new WaitForSeconds(2f);
 
@@ -117,6 +137,13 @@ public class BattleSystem : MonoBehaviour {
 		StartCoroutine(PlayerHeal());
 	}
 
+	public void OnSkillButton() {
+		if (state != BattleState.PLAYERTURN)
+			return;
+
+		StartCoroutine(PlayerMagicAttack());
+	}
+
 	public void OnEscapeButton() {
 		if (state != BattleState.PLAYERTURN)
 			return;
@@ -132,7 +159,7 @@ public class BattleSystem : MonoBehaviour {
 
 		yield return new WaitForSeconds(1f);
 
-		bool isDead = playerUnit.TakeDamage(enemyUnit.damage);
+		bool isDead = playerUnit.TakeDamage(enemyUnit.damage, playerUnit.defense);
 
 		playerHUD.SetHP(playerUnit.currentHP);
 
@@ -165,6 +192,7 @@ public class BattleSystem : MonoBehaviour {
 		SceneManager.LoadScene("ShadowIsland");
 		// 해야할 것
 		// 이전 씬에서의 위치를 기억해 그 위치로 보내주기
+		// ToBattleScene에서 처리
 	}
 
 	
