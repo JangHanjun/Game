@@ -77,13 +77,14 @@ public class BattleSystem : MonoBehaviour {
 
 	IEnumerator PlayerMagicAttack() {
 		bool isDead = enemyUnit.TakeDamage(playerUnit.Mdamage, enemyUnit.defense);
+		
+			playerUnit.AfterMAttack();
+			playerHUD.SetMP(playerUnit.currentMP);
+			enemyHUD.SetHP(enemyUnit.currentHP);
+			dialogueText.text = "스킬이 잘 들어갔다!";
 
-		playerUnit.AfterMAttack();
-		playerHUD.SetMP(playerUnit.currentMP);
-		enemyHUD.SetHP(enemyUnit.currentHP);
-		dialogueText.text = "스킬이 잘 들어갔다!";
-
-		yield return new WaitForSeconds(2f);
+			yield return new WaitForSeconds(1f);
+		
 
 		if (isDead) {
 			//적이 죽는다면 배틀 상태 변화
@@ -140,8 +141,12 @@ public class BattleSystem : MonoBehaviour {
 	public void OnSkillButton() {
 		if (state != BattleState.PLAYERTURN)
 			return;
-
-		StartCoroutine(PlayerMagicAttack());
+		if (playerUnit.currentMP > 5)
+			StartCoroutine(PlayerMagicAttack());
+        else {
+			dialogueText.text = "마나 없쥬?";
+			return;
+		}
 	}
 
 	public void OnEscapeButton() {
