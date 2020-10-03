@@ -22,8 +22,8 @@ public class PlayerMove : MonoBehaviour {
     public int maxJump;
 
     //WallJump
-    Vector3 dirVec; //방향을 가져오기 위한 변수
-    GameObject scanObject;
+    Vector3 dirVec; //wallJumpRay's direction
+    //GameObject scanObject; // for debug
     bool isWall;
     float h;
     public float slidingSpeed;
@@ -71,10 +71,12 @@ public class PlayerMove : MonoBehaviour {
             dirVec = Vector3.left;
         else if (h == 1)
             dirVec = Vector3.right;
-        // 조사 액션을 위한 코드
+        /*
+         // for debug wallJumpRay
         if (scanObject != null) {
             Debug.Log(scanObject.name);
         }
+        */
     }
     void FixedUpdate() {
         // Moving
@@ -94,7 +96,7 @@ public class PlayerMove : MonoBehaviour {
         RaycastHit2D wallJumpRay = Physics2D.Raycast(rigid.position, dirVec, 0.4f, LayerMask.GetMask("Wall"));
 
         if (wallJumpRay.collider != null) {
-            scanObject = wallJumpRay.collider.gameObject;
+            //scanObject = wallJumpRay.collider.gameObject;    // for debug
             isWall = true; // 이후 애니메이션 만든다면 사용할 것
             rigid.velocity = new Vector2(rigid.velocity.x, rigid.velocity.y * slidingSpeed);
             //WallJump
@@ -109,7 +111,7 @@ public class PlayerMove : MonoBehaviour {
                 }
             }
         } else {
-            scanObject = null;
+            return;
         }
     }
 
