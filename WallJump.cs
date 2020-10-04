@@ -16,7 +16,7 @@ public class PlayerMove : MonoBehaviour {
     [SerializeField]
     LayerMask islayer;
     public float jumpPower;
-    bool isGround;
+    public bool isGround;
     public float checkRadius;
     public int jumpCount;
     public int maxJump;
