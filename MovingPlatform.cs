@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
-    public bool isUpDown;
+    public bool isUpDown;   // inspector controll
     public float movingSpeed;
     public float amplitude;
     Vector2 startPosition;
@@ -31,6 +31,7 @@ public class MovingPlatform : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.transform.CompareTag("Player") && collision.gameObject.GetComponent<PlayerMove>().isGround ) {
             collision.transform.SetParent(transform);
+            // using player script to prevent wall stick
         }
     }
     private void OnCollisionExit2D(Collision2D collision) {
