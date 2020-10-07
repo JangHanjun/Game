@@ -65,6 +65,13 @@ public class PlayerMove : MonoBehaviour {
             jumpCount = maxJump;
         }
 
+        // Sliding
+        /*
+         * using if(isGround == true && Input.GetKeyDown(KeyCode.LeftShift)){
+         *  Sliding code
+         * }
+         */
+
         //Direction (Right or Left)
         h = Input.GetAxisRaw("Horizontal");
         if (h == -1)
