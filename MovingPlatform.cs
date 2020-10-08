@@ -32,6 +32,8 @@ public class MovingPlatform : MonoBehaviour
         if (collision.transform.CompareTag("Player") && collision.gameObject.GetComponent<PlayerMove>().isGround ) {
             collision.transform.SetParent(transform);
             // using player script to prevent wall stick
+            // 땅에 닿고있을 때 무빙플랫폼이 옆에 붙으면 움직여버리는 현상이 있음
+            // 우째할지 
         }
     }
     private void OnCollisionExit2D(Collision2D collision) {
