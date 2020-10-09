@@ -24,7 +24,7 @@ public class PlayerMove : MonoBehaviour {
     //WallJump
     Vector3 dirVec; //wallJumpRay's direction
     //GameObject scanObject; // for debug
-    bool isClimbing;
+    // bool isClimbing;
     float h;
     public float slidingSpeed;
     public float wallJumpPower;
@@ -109,13 +109,13 @@ public class PlayerMove : MonoBehaviour {
             //WallJump
             if (Input.GetAxis("Jump") != 0) {
                 isWallJump = true;
-                Invoke("FreezX", 0.3f);
-                rigid.velocity = new Vector2(-h * wallJumpPower, 0.9f * wallJumpPower);
-                if (spriteRenderer.flipX) {
+                Invoke("FreezX", 0.5f);
+                rigid.velocity = new Vector2(-0.9f * wallJumpPower, 0.9f * wallJumpPower);
+               if (spriteRenderer.flipX) {
                     spriteRenderer.flipX = false;
-                } else if (!spriteRenderer.flipX) {
+                      } else if (!spriteRenderer.flipX) {
                     spriteRenderer.flipX = true;
-                }
+                      }
             }
         } else {
             animator.SetBool("isClimbing", false);
