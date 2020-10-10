@@ -66,11 +66,14 @@ public class PlayerMove : MonoBehaviour {
         }
 
         // Sliding
-        /*
-         * using if(isGround == true && Input.GetKeyDown(KeyCode.LeftShift)){
-         *  Sliding code
-         * }
-         */
+        if(isGround == true && Input.GetKeyDown(KeyCode.LeftShift)){
+            animator.SetBool("isSliding", true);
+            Invoke("slidingFalse", 0.5f);
+            //Sliding code 
+            // 0.3f 무적 타임
+            // Stamina
+         }
+
 
         //Direction (Right or Left)
         h = Input.GetAxisRaw("Horizontal");
@@ -126,4 +129,9 @@ public class PlayerMove : MonoBehaviour {
     void FreezX() {
         isWallJump = false;
     }
+    //Stop Sliding
+    void slidingFalse() {
+        animator.SetBool("isSliding", false);
+    }
+
 }
