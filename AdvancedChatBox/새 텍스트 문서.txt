@@ -1,0 +1,11 @@
+Hierarchy 에서
+ 1. TextMeshPro 사용 (이후 크기조절)
+ 2. 3D Object - Quad 생성
+ 3. 프로젝트 창에서 만든 Mesh를 쿼드에 넣음
+ 4. 쿼드를 TextMeshPro의 자식으로
+ 5. TextMeshPro에 시스템 스크립트 넣음
+ 6. Text에는 TextMeshPro, 쿼드에는 만들어둔 쿼드
+ 7. 이후 프리팹화
+
+NPC를 만든 뒤 NPC에 NPC스크립트를 지정
+NPC의 자식으로 빈 오브젝트 (챗박스가 나올 위치)
