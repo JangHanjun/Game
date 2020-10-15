@@ -28,6 +28,8 @@ public class ChatBoxSystem : MonoBehaviour {
             x = (x > 3) ? 3 : x + 0.3f;
             quad.transform.localScale = new Vector2(x, text.preferredHeight + 0.3f);
 
+            // todo : 움직이는 NPC의 경우 말풍선이 따라다니지 않아 조금 어색함
+            // 말풍선 따라다니는 로직을 만들어 보자
             transform.position = new Vector2(chatPoint.position.x, chatPoint.position.y + text.preferredHeight / 2);
             yield return new WaitForSeconds(2f);
         }
