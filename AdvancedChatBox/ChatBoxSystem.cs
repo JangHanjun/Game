@@ -1,38 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
-public class ChatBoxSystem : MonoBehaviour {
-    public Queue<string> sentences;
-    public string currentSentence;
-    public TextMeshPro text;
-    public GameObject quad;
+public class ChatBoxNPC : MonoBehaviour {
+    public string[] sentences;  // NPC의 대사를 받을 배열
+    public Transform chatBoxPos;  // 말풍선의 생성 위치
+    public GameObject chatBoxPrefab;  // 만든 챗 박스
+    public bool isTalk = false;  //default
 
-    public void Ondialogue(string[] lines, Transform chatPoint) {
-        transform.position = chatPoint.position;
-        sentences = new Queue<string>();
-        sentences.Clear();
-        foreach (var line in lines) {
-            sentences.Enqueue(line);
+    // NPC Moving
+    // 움직이는 NPC들의 경우 rigidbody를 사용하기 때문에 y축 고정을 사용하고 is trigger을 해줌
+    Rigidbody2D rigid;
+    public int moveDir;
+    SpriteRenderer spriteRenderer;   // to flip
+
+    //public float sentenceLength;     chatboxsystem의 sentence 큐 길이를 구하면 이 변수를 이용해 아래 invoke 시간을 조정할 수 있을 것 같다.
+
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.gameObject.tag == "Player") {
+            if (isTalk == false) {
+                TalkNpc();
+            } else {
+                return;
+            }
         }
-        StartCoroutine(DialogueFlow(chatPoint));
     }
-    // output Queue
-    IEnumerator DialogueFlow(Transform chatPoint) {
-        yield return null;
-        while (sentences.Count > 0) {
-            currentSentence = sentences.Dequeue();
-            text.text = currentSentence;
-            float x = text.preferredWidth;
-            x = (x > 3) ? 3 : x + 0.3f;
-            quad.transform.localScale = new Vector2(x, text.preferredHeight + 0.3f);
 
-            // todo : 움직이는 NPC의 경우 말풍선이 따라다니지 않아 조금 어색함
-            // 말풍선 따라다니는 로직을 만들어 보자
-            transform.position = new Vector2(chatPoint.position.x, chatPoint.position.y + text.preferredHeight / 2);
-            yield return new WaitForSeconds(2f);
+    // Make NPC Moving
+    private void Awake() {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        rigid = GetComponent<Rigidbody2D>();
+        NPCMoving();
+    }
+    private void FixedUpdate() {
+        rigid.velocity = new Vector2(moveDir, rigid.velocity.y);   // no jump
+    }
+    void NPCMoving() {
+        moveDir = Random.Range(-1, 2);   // -1<= ranNum <2
+        // flip sprite
+        if(moveDir > 0) {
+            spriteRenderer.flipX = true;
+        } else {
+            spriteRenderer.flipX = false;
         }
-        Destroy(gameObject);
+        // change frequency,  2 can be random num like moveDir   or    public float to see in inspector
+        Invoke("NPCMoving", 0.5f);
+    }
+
+    //다시 대화할 수 있게 해줌 = 이거 없으면 한번만 말하게 됨
+    private void TFchange() {
+        if (isTalk == true)
+            isTalk = false;
+    }
+
+    public void TalkNpc() {
+        isTalk = true;
+        GameObject go = Instantiate(chatBoxPrefab);
+        go.GetComponent<ChatBoxSystem>().Ondialogue(sentences, chatBoxPos);
+        Invoke("TFchange", 7f); // 두 문장이라서 7초라고 했음   (문장의 길이)*2 + 1
     }
 }
