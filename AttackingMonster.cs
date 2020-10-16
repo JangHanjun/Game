@@ -1,3 +1,5 @@
+// 플레이어를 쫒아다니는 몬스터 구현 
+// 몬스터용 콜라이더랑 감지용 원형 콜라이더(이건트리거) 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,10 +34,11 @@ public class AttackingMonster : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
+        // find player
         if (collision.gameObject.tag == "Player") {
             CancelInvoke("monsterAI");   // 이 부분에서 함수를 바로 취소하지 못해 왔다갔다 하면 딜레이가 조금 있다.
             if(target.position.x > transform.position.x) {
-                moveDir = 3;
+                moveDir = 3;     // speed up
             } else if (target.position.x < transform.position.x) {
                 moveDir = -3;
             }
@@ -43,7 +46,7 @@ public class AttackingMonster : MonoBehaviour {
     }
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.gameObject.tag == "Player")
-            monsterAI();
+            monsterAI();    // return to normal
     }
 
 }
