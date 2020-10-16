@@ -31,7 +31,7 @@ public class PlayerMove : MonoBehaviour {
     bool isWallJump;
 
     //Sliding
-    public float slidingPower;
+    //public float slidingPower;
 
     void Awake() {
         rigid = GetComponent<Rigidbody2D>();
@@ -71,11 +71,11 @@ public class PlayerMove : MonoBehaviour {
         // Sliding
         if(isGround == true && Input.GetKeyDown(KeyCode.LeftShift)){
             animator.SetBool("isSliding", true);
-            //누르면 속도를 올릴려고 했으나 실패
-           // rigid.velocity = new Vector2(h * 0.9f * slidingPower, rigid.velocity.y);
-            Invoke("slidingFalse", 0.5f);
-            // 아주 짧은 무적 시간을 해두자
-            // Stamina
+            // 스테미나 : 스테미나 감소 코드를 넣고 위 조건에서 스테미나 있어야 한다는 조건을 넣자
+            //todo : 슬라이딩 가속도를 넣어보자
+            // rigid.velocity = new Vector2(h * 0.9f * slidingPower, rigid.velocity.y);
+            gameObject.layer = 12;   // become invincible
+            Invoke("slidingFalse", 0.5f);   // todo : invoke의 시간을 변수로 변경하자
          }
 
 
@@ -136,6 +136,27 @@ public class PlayerMove : MonoBehaviour {
     //Stop Sliding
     void slidingFalse() {
         animator.SetBool("isSliding", false);
+        gameObject.layer = 11;   // invincible time end
     }
 
+    // Monster Damage
+    void OnCollisionEnter2D(Collision2D collision) {
+        if(collision.gameObject.tag == "Enemy") {
+            playerDamaged(collision.transform.position);
+        }
+    }
+    void playerDamaged(Vector2 enemyPos) {
+        gameObject.layer = 12;   //change layer to Player Damaged layer
+        spriteRenderer.color = new Color(1, 1, 1, 0.5f);   // Damaged Effect
+        // Enemy > Add Force
+        int dir = transform.position.x - enemyPos.x > 0 ? 1 : -1;                           // enemy is on right = 1, else = -1
+        rigid.AddForce(new Vector2(dir, 1) * 7, ForceMode2D.Impulse);    // 
+        // TODO : HP decrease
+        // TODO : Animation
+        Invoke("returnLayer", 1);  // invincible time
+    }
+    void returnLayer() {
+        gameObject.layer = 11;  // change layer to Player layer
+        spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
 }
