@@ -31,13 +31,20 @@ public class PlayerMove : MonoBehaviour {
     bool isWallJump;
 
     //Sliding
-    public float slidingPower;
+    //public float slidingPower;
+
+    // Stat
+    public float stamina;
+    float maxStamina = 100;
+    bool isRecovering;
 
     void Awake() {
         rigid = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         jumpCount = maxJump;
+        stamina = maxStamina;
+        isRecovering = false;
     }
 
     void Update() {
@@ -69,15 +76,17 @@ public class PlayerMove : MonoBehaviour {
         }
 
         // Sliding
-        if(isGround == true && Input.GetKeyDown(KeyCode.LeftShift)){
+        if(isGround == true && Input.GetKeyDown(KeyCode.LeftShift) && stamina > 60){
             animator.SetBool("isSliding", true);
-            //누르면 속도를 올릴려고 했으나 실패
-           // rigid.velocity = new Vector2(h * 0.9f * slidingPower, rigid.velocity.y);
-            Invoke("slidingFalse", 0.5f);
-            // 아주 짧은 무적 시간을 해두자
-            // Stamina
+            // 스테미나 테스트니깐 60 -> 이후 10, 또는 변수로 변경하자
+            // todo : 왜인지는 모르지만 스테미나 60인데 슬라이딩을 안하는 경우가 있다
+            stamina -= 60;
+            //todo : 슬라이딩 가속도를 넣어보자
+            // rigid.velocity = new Vector2(h * 0.9f * slidingPower, rigid.velocity.y);
+            gameObject.layer = 12;                                       // become invincible
+            Invoke("slidingFalse", 0.5f);                         // todo : invoke의 시간을 변수로 변경하자
+            reSta();
          }
-
 
         //Direction (Right or Left)
         h = Input.GetAxisRaw("Horizontal");
@@ -136,7 +145,18 @@ public class PlayerMove : MonoBehaviour {
     //Stop Sliding
     void slidingFalse() {
         animator.SetBool("isSliding", false);
+        gameObject.layer = 11;   // invincible time end
     }
+    // Recover Stamina
+    void reSta() {
+        if(stamina < maxStamina) {
+            stamina += 10;
+        } else {
+            CancelInvoke("reSta");
+        }
+     Invoke("reSta", 4f);
+    }
+
     // Monster Damage
     void OnCollisionEnter2D(Collision2D collision) {
         if(collision.gameObject.tag == "Enemy") {
