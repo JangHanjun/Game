@@ -35,7 +35,7 @@ public class PlayerMove : MonoBehaviour {
 
     // Stat
     public float stamina;
-    float maxStamina = 100;
+    float maxStamina = 100;                     // todo : 양수만을 표기하도록 변경해야함
     bool isRecovering;
 
     void Awake() {
@@ -80,7 +80,7 @@ public class PlayerMove : MonoBehaviour {
             animator.SetBool("isSliding", true);
             // 스테미나 테스트니깐 60 -> 이후 10, 또는 변수로 변경하자
             // todo : 왜인지는 모르지만 스테미나 60인데 슬라이딩을 안하는 경우가 있다
-            stamina -= 60;
+            stamina -= 30;
             //todo : 슬라이딩 가속도를 넣어보자
             // rigid.velocity = new Vector2(h * 0.9f * slidingPower, rigid.velocity.y);
             gameObject.layer = 12;                                       // become invincible
@@ -94,12 +94,6 @@ public class PlayerMove : MonoBehaviour {
             dirVec = Vector3.left;
         else if (h == 1)
             dirVec = Vector3.right;
-        /*
-         // for debug wallJumpRay
-        if (scanObject != null) {
-            Debug.Log(scanObject.name);
-        }
-        */
     }
     void FixedUpdate() {
         // Moving
@@ -123,11 +117,12 @@ public class PlayerMove : MonoBehaviour {
             animator.SetBool("isClimbing", true);
             rigid.velocity = new Vector2(rigid.velocity.x, rigid.velocity.y * slidingSpeed);
             //WallJump
-            if (Input.GetAxis("Jump") != 0) {
+            if (Input.GetAxis("Jump") != 0 && stamina > 10) {
+                stamina -= 50;
                 isWallJump = true;
                 Invoke("FreezX", 0.5f);
                 rigid.velocity = new Vector2(-0.9f * wallJumpPower, 0.9f * wallJumpPower);
-               if (spriteRenderer.flipX) {
+                if (spriteRenderer.flipX) {
                     spriteRenderer.flipX = false;
                       } else if (!spriteRenderer.flipX) {
                     spriteRenderer.flipX = true;
