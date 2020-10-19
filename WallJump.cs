@@ -31,20 +31,18 @@ public class PlayerMove : MonoBehaviour {
     bool isWallJump;
 
     //Sliding
+    [SerializeField]
+    bool canSlide;
     //public float slidingPower;
 
     // Stat
-    public float stamina;
-    float maxStamina = 100;                     // todo : 양수만을 표기하도록 변경해야함
-    bool isRecovering;
 
     void Awake() {
         rigid = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         jumpCount = maxJump;
-        stamina = maxStamina;
-        isRecovering = false;
+        canSlide = true;
     }
 
     void Update() {
@@ -76,17 +74,14 @@ public class PlayerMove : MonoBehaviour {
         }
 
         // Sliding
-        if(isGround == true && Input.GetKeyDown(KeyCode.LeftShift) && stamina > 60){
+        if (isGround == true && Input.GetKeyDown(KeyCode.LeftShift) && canSlide == true) {
             animator.SetBool("isSliding", true);
-            // 스테미나 테스트니깐 60 -> 이후 10, 또는 변수로 변경하자
-            // todo : 왜인지는 모르지만 스테미나 60인데 슬라이딩을 안하는 경우가 있다
-            stamina -= 30;
+            canSlide = false;
             //todo : 슬라이딩 가속도를 넣어보자
-            // rigid.velocity = new Vector2(h * 0.9f * slidingPower, rigid.velocity.y);
             gameObject.layer = 12;                                       // become invincible
             Invoke("slidingFalse", 0.5f);                         // todo : invoke의 시간을 변수로 변경하자
-            reSta();
-         }
+            Invoke("TFslide", 1f);                                          // 1f is delay time
+        }
 
         //Direction (Right or Left)
         h = Input.GetAxisRaw("Horizontal");
@@ -117,8 +112,7 @@ public class PlayerMove : MonoBehaviour {
             animator.SetBool("isClimbing", true);
             rigid.velocity = new Vector2(rigid.velocity.x, rigid.velocity.y * slidingSpeed);
             //WallJump
-            if (Input.GetAxis("Jump") != 0 && stamina > 10) {
-                stamina -= 50;
+            if (Input.GetAxis("Jump") != 0) {
                 isWallJump = true;
                 Invoke("FreezX", 0.5f);
                 rigid.velocity = new Vector2(-0.9f * wallJumpPower, 0.9f * wallJumpPower);
@@ -137,19 +131,14 @@ public class PlayerMove : MonoBehaviour {
     void FreezX() {
         isWallJump = false;
     }
-    //Stop Sliding
+    //Sliding
     void slidingFalse() {
         animator.SetBool("isSliding", false);
-        gameObject.layer = 11;   // invincible time end
+        gameObject.layer = 11;                                                                                                            // invincible time end
     }
-    // Recover Stamina
-    void reSta() {
-        if(stamina < maxStamina) {
-            stamina += 10;
-        } else {
-            CancelInvoke("reSta");
-        }
-     Invoke("reSta", 4f);
+    void TFslide() {
+        if (canSlide == false)
+            canSlide = true;
     }
 
     // Monster Damage
@@ -159,8 +148,8 @@ public class PlayerMove : MonoBehaviour {
         }
     }
     void playerDamaged(Vector2 enemyPos) {
-        gameObject.layer = 12;   //change layer to Player Damaged layer
-        spriteRenderer.color = new Color(1, 1, 1, 0.5f);   // Damaged Effect
+        gameObject.layer = 12;                                                                                                          //change layer to Player Damaged layer
+        spriteRenderer.color = new Color(1, 1, 1, 0.5f);                                               // Damaged Effect
         // Enemy > Add Force
         int dir = transform.position.x - enemyPos.x > 0 ? 1 : -1;                           // enemy is on right = 1, else = -1
         rigid.AddForce(new Vector2(dir, 1) * 7, ForceMode2D.Impulse);    // 
@@ -169,7 +158,7 @@ public class PlayerMove : MonoBehaviour {
         Invoke("returnLayer", 1);  // invincible time
     }
     void returnLayer() {
-        gameObject.layer = 11;  // change layer to Player layer
+        gameObject.layer = 11;                                                                                                              // change layer to Player layer
         spriteRenderer.color = new Color(1, 1, 1, 1);
     }
 }
