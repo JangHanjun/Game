@@ -36,6 +36,8 @@ public class PlayerMove : MonoBehaviour {
     //public float slidingPower;
 
     // Stat
+    public int MaxHp;
+    public int currentHp;
 
     void Awake() {
         rigid = GetComponent<Rigidbody2D>();
@@ -43,6 +45,8 @@ public class PlayerMove : MonoBehaviour {
         animator = GetComponent<Animator>();
         jumpCount = maxJump;
         canSlide = true;
+        MaxHp = 100;
+        currentHp = MaxHp;
     }
 
     void Update() {
@@ -148,6 +152,10 @@ public class PlayerMove : MonoBehaviour {
         }
     }
     void playerDamaged(Vector2 enemyPos) {
+        // Hp decrease
+        currentHp -= 10;
+
+
         gameObject.layer = 12;                                                                                                          //change layer to Player Damaged layer
         spriteRenderer.color = new Color(1, 1, 1, 0.5f);                                               // Damaged Effect
         // Enemy > Add Force
