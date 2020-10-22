@@ -6,6 +6,9 @@ public class BossMonster : MonoBehaviour
 {
     public Transform target;                                                     //target = player
     Vector2 playerPos;
+    // warnning before actual attack
+    public GameObject preAtk1;
+    // actual attack prefab
     public GameObject atk1;
     bool isAtk1;
     private void Awake() {
