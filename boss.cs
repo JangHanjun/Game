@@ -6,6 +6,7 @@ public class BossMonster : MonoBehaviour
 {
     public Transform target;                                                     //target = player
     Vector2 playerPos;
+    // Vector2 atk1Pos;
     // warnning before actual attack
     public GameObject preAtk1;
     // actual attack prefab
@@ -14,8 +15,9 @@ public class BossMonster : MonoBehaviour
     private void Awake() {
         isAtk1 = false;
         //Invoke("pattern1", 1);
-        pattern1();
+        prePattern1();
     }
+    
     private void OnTriggerStay2D(Collider2D collision) {
         if (collision.gameObject.tag == "Player") {
             playerPos = target.position;
@@ -28,12 +30,17 @@ public class BossMonster : MonoBehaviour
     // 선 경고 후 공격이 되야 한다
     // pattern1 의 경우 경고 sprite를 내보내고
     // pattern1Atk에서 실제 공격이 이루어진다고 하자
+    void prePattern1(){
+        if(isAtk1 == true){
+            Instantiate(preAtk1, playerPos, transform.rotation);
+            Invoke("pattern1", 2);
+        }
+    }
     void pattern1() {
         if(isAtk1 == true) {
             Instantiate(atk1, playerPos, transform.rotation);
             isAtk1 = false;
         }
-        Invoke("pattern1", 3);
     }
 
 
