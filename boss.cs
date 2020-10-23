@@ -43,7 +43,7 @@ public class BossMonster : MonoBehaviour {
             //Destroy(this.preAtk1);
             Instantiate(atk1, atkPos, transform.rotation);
             isAtk1 = false;
-            Invoke("destory(atk1)", 1f);
+            // Invoke("destory(atk1)", 1f);  // 생성되는 공격들을 없애는 코드를 만들자
         }
         Invoke("prePattern1", 2);
     }
