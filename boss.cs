@@ -22,7 +22,7 @@ public class BossMonster : MonoBehaviour {
     private void OnTriggerStay2D(Collider2D collision) {
         if (collision.gameObject.tag == "Player") {
             playerPos = target.position;
-            Debug.Log(playerPos);
+            // Debug.Log(playerPos);            // 플레이어의 위치를 감지하고 있는가 아니면 첫 좌표만 기억하고 있는가 알기 위한 디버그 코드
             isAtk1 = true;
         }
     }
@@ -33,8 +33,8 @@ public class BossMonster : MonoBehaviour {
     // pattern1Atk에서 실제 공격이 이루어진다고 하자
     void prePattern1() {
         if (isAtk1 == true) {
-            atkPos = playerPos;
-            Instantiate(preAtk1, atkPos, transform.rotation);
+            atkPos = playerPos;                 // preAtk1.position == atk1.position을 하기 위한 변수
+            Instantiate(preAtk1, atkPos, transform.rotation);     // preAtk1 프리팹 안에 스스로 Destory하는 코드가 있다.
             Invoke("pattern1", 2);
         }
     }
@@ -43,13 +43,8 @@ public class BossMonster : MonoBehaviour {
             //Destroy(this.preAtk1);
             Instantiate(atk1, atkPos, transform.rotation);
             isAtk1 = false;
-            // Invoke("destory(atk1)", 1f);  // 생성되는 공격들을 없애는 코드를 만들자
         }
         Invoke("prePattern1", 2);
-    }
-
-    void destory(GameObject obj) {
-        Destroy(obj, 1.9f);
     }
 
 }
