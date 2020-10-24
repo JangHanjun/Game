@@ -36,14 +36,14 @@ public class BossMonster : MonoBehaviour {
         if (isAtk1 == true) {
             atkPos = playerPos;                 // preAtk1.position == atk1.position을 하기 위한 변수
             Instantiate(preAtk1, atkPos, transform.rotation);     // preAtk1 프리팹 안에 스스로 Destory하는 코드가 있다.
-            Invoke("pattern1", 2);
+            Invoke("pattern1", 0.5f);
         }
     }
     void pattern1() {
         if (isAtk1 == true) {
             //Destroy(this.preAtk1);
             Instantiate(atk1, atkPos, transform.rotation);
-            isAtk1 = false;
+            isAtk1 = false;    // should
         }
         Invoke("prePattern1", 2);
     }
