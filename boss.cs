@@ -13,6 +13,8 @@ public class BossMonster : MonoBehaviour {
     // actual attack prefab
     public GameObject atk1;
     bool isAtk1;
+    
+    // Pattern2
 
     private void Awake() {
         isAtk1 = false;
@@ -46,6 +48,14 @@ public class BossMonster : MonoBehaviour {
             isAtk1 = false;    // should
         }
         Invoke("prePattern1", 2);
+    }
+    
+    //pattern2
+    // 플레이어가 콜라이더 밖으로 나가면 실행
+        private void OnTriggerExxit2D(Collider2D collision) {
+        if (collision.gameObject.tag == "Player") {
+            // Debug.Log("Pattern 2");
+        }
     }
 
 }
