@@ -33,9 +33,8 @@ public class BossMonster : MonoBehaviour {
     }
     // attack pattern 1
     // 선 경고 후 공격이 되야 한다
-    // pattern1 의 경우 경고 sprite를 내보내고
-    // pattern1Atk에서 실제 공격이 이루어진다고 하자
-    // atk1, preAtk1을 위한 스크립트를 따로 준비해놓자
+    // pattern1 의 경우 경고 sprite를 내보내고 pattern1Atk에서 실제 공격이 이루어진다
+    // destory는 각 프리팹에서 실행된다
     void prePattern1() {
         if (isAtk1 == true) {
             atkPos = playerPos;                 // preAtk1.position == atk1.position을 하기 위한 변수
