@@ -13,12 +13,12 @@ public class BossMonster : MonoBehaviour {
     // actual attack prefab
     public GameObject atk1;
     bool isAtk1;
-    
+
     // Pattern2
 
     private void Awake() {
         isAtk1 = false;
-        Invoke("prePattern1", 1);
+        prePattern1();
     }
 
     private void OnTriggerStay2D(Collider2D collision) {
@@ -28,7 +28,9 @@ public class BossMonster : MonoBehaviour {
             isAtk1 = true;
         }
     }
-
+    private void OnTriggerExit2D(Collider2D collision) {
+        isAtk1 = false;
+    }
     // attack pattern 1
     // 선 경고 후 공격이 되야 한다
     // pattern1 의 경우 경고 sprite를 내보내고
@@ -38,24 +40,16 @@ public class BossMonster : MonoBehaviour {
         if (isAtk1 == true) {
             atkPos = playerPos;                 // preAtk1.position == atk1.position을 하기 위한 변수
             Instantiate(preAtk1, atkPos, transform.rotation);     // preAtk1 프리팹 안에 스스로 Destory하는 코드가 있다.
-            Invoke("pattern1", 0.5f);
         }
+        Invoke("pattern1", 2f);
     }
     void pattern1() {
         if (isAtk1 == true) {
             //Destroy(this.preAtk1);
             Instantiate(atk1, atkPos, transform.rotation);
-            isAtk1 = false;    // should
         }
-        Invoke("prePattern1", 2);
+        Invoke("prePattern1", 2f);
     }
-    
-    //pattern2
-    // 플레이어가 콜라이더 밖으로 나가면 실행
-        private void OnTriggerExxit2D(Collider2D collision) {
-        if (collision.gameObject.tag == "Player") {
-            // Debug.Log("Pattern 2");
-        }
-    }
+
 
 }
