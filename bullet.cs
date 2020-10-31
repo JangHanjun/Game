@@ -11,9 +11,6 @@ public class bullet : MonoBehaviour {
     public LayerMask layer;
 
     MonsterMove monsterMove;
-    private void Awake() {
-        //monsterMove = GetComponent<MonsterMove>();
-    }
     void Start() {
         Destroy(gameObject, destoryTime);
     }
