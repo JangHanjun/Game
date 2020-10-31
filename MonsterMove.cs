@@ -56,11 +56,11 @@ public class MonsterMove : MonoBehaviour
         Invoke("monsterAI", moveF);
     }
     // Monster Damage
-    void OnCollisionEnter2D(Collision2D collision) {
+   /* void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "bullet") {
             Damaged();
         }
-    }
+    } */
     // Damaged
     public void Damaged() {
         monsterHp = monsterHp - 1; // playerMove.power;
