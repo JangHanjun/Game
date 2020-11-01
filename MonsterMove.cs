@@ -13,6 +13,7 @@ public class MonsterMove : MonoBehaviour {
 
     void Awake() {
         rigid = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         collider = GetComponent<BoxCollider2D>();
         monsterAI();
     }
