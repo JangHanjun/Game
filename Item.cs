@@ -8,7 +8,12 @@ public class Item : MonoBehaviour
     public enum  Type { Coin, Heart, Weapon};
     public Type type;
     public int value;
-    void Update() {
-        transform.Rotate(Vector3.up * 70 * Time.deltaTime);    // Item spinning
+
+    private void OnTriggerEnter2D(Collider2D collision){
+        if(collision.gameObject.tag =="Player"){
+            Debug.Log("플레이어 감지!");
+            Destroy(gameObject);
+            playerAttack.atk += 1;
+        }
     }
 }
