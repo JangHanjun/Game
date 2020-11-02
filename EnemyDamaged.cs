@@ -19,6 +19,7 @@ public class EnemyDamaged : MonoBehaviour
     public void Damaged() {
         if (curHp <= 0) {
             spriteRenderer.color = new Color(1, 1, 1, 0.4f);
+            boxCollider2D.enabled = false;
         }
     }
 }
